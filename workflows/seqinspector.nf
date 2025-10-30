@@ -12,6 +12,7 @@ include { SEQFU_STATS                   } from '../modules/nf-core/seqfu/stats'
 include { FASTQSCREEN_FASTQSCREEN       } from '../modules/nf-core/fastqscreen/fastqscreen/main'
 include { BWAMEM2_INDEX                 } from '../modules/nf-core/bwamem2/index/main'
 include { BWAMEM2_MEM                   } from '../modules/nf-core/bwamem2/mem/main'
+include { PICARD_COLLECTHSMETRICS       } from '../modules/nf-core/picard/collecthsmetrics/main'
 
 include { MULTIQC as MULTIQC_GLOBAL     } from '../modules/nf-core/multiqc/main'
 include { MULTIQC as MULTIQC_PER_TAG    } from '../modules/nf-core/multiqc/main'
@@ -131,6 +132,9 @@ workflow SEQINSPECTOR {
         ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions)
         ch_bwamem2_mem.view { "BAM: $it" }
 
+
+    PICARD_COLLECTHSMETRICS (
+    )
 
 }
 
