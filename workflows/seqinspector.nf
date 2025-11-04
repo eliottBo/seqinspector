@@ -131,12 +131,14 @@ workflow SEQINSPECTOR {
         ch_bwamem2_mem = BWAMEM2_MEM.out.bam
         ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions)
         ch_bwamem2_mem.view { "BAM: $it" }
+    }
 
+    // MODULE: Collect HS Metrics with Picard
+    if (!("picard_collecthsmetrics" in skip_tools)) {
+        PICARD_COLLECTHSMETRICS (
+        )
 
-    PICARD_COLLECTHSMETRICS (
-    )
-
-}
+    }
 
     // Collate and save software versions
     //
