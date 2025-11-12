@@ -28,7 +28,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_seqi
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-workflow SEQINSPECTOR {
+ workflow SEQINSPECTOR {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
 
@@ -142,9 +142,9 @@ workflow SEQINSPECTOR {
 
 
         ch_hsmetrics_in = ch_bwamem2_mem
-                          .join(ch_bai, remainder: true)
-                          .join(ch_bait_intervals, remainder: true)
-                          .join(ch_target_intervals, remainder: true)
+            .join(ch_bai, remainder: true)
+            .join(ch_bait_intervals, remainder: true)
+            .join(ch_target_intervals, remainder: true)
 
 
         PICARD_COLLECTHSMETRICS(
