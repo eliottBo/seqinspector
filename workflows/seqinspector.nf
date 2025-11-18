@@ -12,7 +12,9 @@ include { SEQFU_STATS } from '../modules/nf-core/seqfu/stats'
 include { FASTQSCREEN_FASTQSCREEN } from '../modules/nf-core/fastqscreen/fastqscreen/main'
 include { BWAMEM2_INDEX } from '../modules/nf-core/bwamem2/index/main'
 include { BWAMEM2_MEM } from '../modules/nf-core/bwamem2/mem/main'
+include { PICARD_CREATESEQUENCEDICTIONARY } from '../modules/nf-core/picard/createsequencedictionary/main'
 include { PICARD_COLLECTHSMETRICS } from '../modules/nf-core/picard/collecthsmetrics/main'
+
 
 include { MULTIQC as MULTIQC_GLOBAL } from '../modules/nf-core/multiqc/main'
 include { MULTIQC as MULTIQC_PER_TAG } from '../modules/nf-core/multiqc/main'
@@ -154,11 +156,21 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_seqi
             .dump(tag: 'ch_hsmetrics_in')
 
 
+        if (!params.ref_dict) {
+            PICARD_CREATESEQUENCEDICTIONARY(
+                ch_reference_fasta
+            )
+            ch_ref_dict = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
+        }
+        else {
+            ch_ref_dict = Channel.fromPath(params.ref_dict).map { [[id: it.simpleName], it] }
+            }
+
         PICARD_COLLECTHSMETRICS(
             ch_hsmetrics_in,
             [[],[]],
             [[],[]],
-            [[],[]],
+            ch_ref_dict,
             [[],[]],
         )
     }
