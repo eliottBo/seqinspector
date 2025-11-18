@@ -135,20 +135,31 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_seqi
 
     if (!("picard_collecthsmetrics" in skip_tools)) {
 
-        ch_bai = params.bai ? Channel.fromPath(params.bai) : Channel.empty()
+        ch_bai = params.bai ? Channel.fromPath(params.bai) : Channel.of([[]])
+                                                                    .collect()
+                                                                    .dump(tag: 'ch_bai')
 
         ch_bait_intervals = Channel.fromPath(params.bait_intervals)
+                                   .collect()
+                                   .dump(tag: 'ch_bait_intervals')
         ch_target_intervals = Channel.fromPath(params.target_intervals)
+                                     .collect()
+                                     .dump(tag: 'ch_target_intervals')
 
 
         ch_hsmetrics_in = ch_bwamem2_mem
-            .join(ch_bai, remainder: true)
-            .join(ch_bait_intervals, remainder: true)
-            .join(ch_target_intervals, remainder: true)
+            .combine(ch_bai)
+            .combine(ch_bait_intervals)
+            .combine(ch_target_intervals)
+            .dump(tag: 'ch_hsmetrics_in')
 
 
         PICARD_COLLECTHSMETRICS(
-            ch_hsmetrics_in
+            ch_hsmetrics_in,
+            [[],[]],
+            [[],[]],
+            [[],[]],
+            [[],[]],
         )
     }
 
