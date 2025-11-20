@@ -173,6 +173,8 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_seqi
             ch_ref_dict,
             [[],[]],
         )
+        ch_multiqc_files = ch_multiqc_files.mix(PICARD_COLLECTHSMETRICS.out.metrics)
+        ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())
     }
 
 
