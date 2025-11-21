@@ -30,7 +30,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_seqi
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
- workflow SEQINSPECTOR {
+workflow SEQINSPECTOR {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
 
@@ -137,16 +137,19 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_seqi
 
     if (!("picard_collecthsmetrics" in skip_tools)) {
 
-        ch_bai = params.bai ? Channel.fromPath(params.bai) : Channel.of([[]])
-                                                                    .collect()
-                                                                    .dump(tag: 'ch_bai')
+        ch_bai = Channel
+            .of([[]])
+            .collect()
+            .dump(tag: 'ch_bai')
 
-        ch_bait_intervals = Channel.fromPath(params.bait_intervals)
-                                   .collect()
-                                   .dump(tag: 'ch_bait_intervals')
-        ch_target_intervals = Channel.fromPath(params.target_intervals)
-                                     .collect()
-                                     .dump(tag: 'ch_target_intervals')
+        ch_bait_intervals = Channel
+            .fromPath(params.bait_intervals)
+            .collect()
+            .dump(tag: 'ch_bait_intervals')
+        ch_target_intervals = Channel
+            .fromPath(params.target_intervals)
+            .collect()
+            .dump(tag: 'ch_target_intervals')
 
 
         ch_hsmetrics_in = ch_bwamem2_mem
@@ -164,14 +167,14 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_seqi
         }
         else {
             ch_ref_dict = Channel.fromPath(params.ref_dict).map { [[id: it.simpleName], it] }
-            }
+        }
 
         PICARD_COLLECTHSMETRICS(
             ch_hsmetrics_in,
-            [[],[]],
-            [[],[]],
+            [[], []],
+            [[], []],
             ch_ref_dict,
-            [[],[]],
+            [[], []],
         )
         ch_multiqc_files = ch_multiqc_files.mix(PICARD_COLLECTHSMETRICS.out.metrics)
         ch_versions = ch_versions.mix(PICARD_COLLECTHSMETRICS.out.versions.first())

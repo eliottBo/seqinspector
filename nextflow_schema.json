@@ -246,7 +246,8 @@
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
-                    "hidden": true
+                    "hidden": true,
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/"
                 },
                 "trace_report_suffix": {
                     "type": "string",
@@ -262,20 +263,29 @@
             "description": "",
             "default": "",
             "properties": {
-                "bai": {
-                    "type": "string",
-                    "description": "Path to bai file.",
-                    "hidden": true
-                },
                 "bait_intervals": {
                     "type": "string",
-                    "description": "Path to bait_intervals file.",
-                    "hidden": true
+                    "description": "Path to bait intervals file.",
+                    "hidden": true,
+                    "pattern": "^\\S+.(bed|bed.gz|interval_list)$",
+                    "format": "file-path",
+                    "exists": true
                 },
                 "target_intervals": {
                     "type": "string",
-                    "description": "Path to target_intervals file.",
-                    "hidden": true
+                    "description": "Path to target intervals file.",
+                    "hidden": true,
+                    "pattern": "^\\S+.(bed|bed.gz|interval_list)$",
+                    "format": "file-path",
+                    "exists": true
+                },
+                "ref_dict": {
+                    "type": "string",
+                    "hidden": true,
+                    "description": "Sequence dictionary for the reference fasta file provided.",
+                    "pattern": "^\\S+.dict$",
+                    "format": "file-path",
+                    "exists": true
                 }
             }
         }
