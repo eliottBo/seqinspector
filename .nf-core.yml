@@ -1,1 +1,20 @@
+lint:
+  actions_ci: false
+  files_unchanged:
+    - .github/CONTRIBUTING.md
+  files_exist:
+    - .github/workflows/ci.yml
+  nextflow_config:
+    - config_defaults:
+        - params.fastq_screen_references
+nf_core_version: 3.2.0
 repository_type: pipeline
+template:
+  author: Adrien Coulier
+  description: Pipeline to QC your sequences
+  force: false
+  is_nfcore: true
+  name: seqinspector
+  org: nf-core
+  outdir: .
+  version: 1.0dev
