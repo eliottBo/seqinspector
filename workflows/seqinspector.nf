@@ -6,24 +6,24 @@ include { samplesheetToList } from 'plugin/nf-schema'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { BWAMEM2_INDEX } from '../modules/nf-core/bwamem2/index'
-include { BWAMEM2_MEM } from '../modules/nf-core/bwamem2/mem'
-include { FASTQC } from '../modules/nf-core/fastqc'
-include { FASTQSCREEN_FASTQSCREEN } from '../modules/nf-core/fastqscreen/fastqscreen'
+include { BWAMEM2_INDEX                 } from '../modules/nf-core/bwamem2/index'
+include { BWAMEM2_MEM                   } from '../modules/nf-core/bwamem2/mem'
+include { FASTQC                        } from '../modules/nf-core/fastqc'
+include { FASTQSCREEN_FASTQSCREEN       } from '../modules/nf-core/fastqscreen/fastqscreen'
 include { PICARD_COLLECTMULTIPLEMETRICS } from '../modules/nf-core/picard/collectmultiplemetrics'
-include { SAMTOOLS_FAIDX } from '../modules/nf-core/samtools/faidx'
-include { SAMTOOLS_INDEX } from '../modules/nf-core/samtools/index'
-include { SEQFU_STATS } from '../modules/nf-core/seqfu/stats'
-include { SEQTK_SAMPLE } from '../modules/nf-core/seqtk/sample'
-include { QC_BAM } from '../subworkflows/local/qc_bam'
+include { SAMTOOLS_FAIDX                } from '../modules/nf-core/samtools/faidx'
+include { SAMTOOLS_INDEX                } from '../modules/nf-core/samtools/index'
+include { SEQFU_STATS                   } from '../modules/nf-core/seqfu/stats'
+include { SEQTK_SAMPLE                  } from '../modules/nf-core/seqtk/sample'
+include { QC_BAM                        } from '../subworkflows/local/qc_bam'
 
-include { MULTIQC as MULTIQC_GLOBAL } from '../modules/nf-core/multiqc'
-include { MULTIQC as MULTIQC_PER_TAG } from '../modules/nf-core/multiqc'
+include { MULTIQC as MULTIQC_GLOBAL     } from '../modules/nf-core/multiqc'
+include { MULTIQC as MULTIQC_PER_TAG    } from '../modules/nf-core/multiqc'
 
-include { paramsSummaryMap } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_seqinspector_pipeline'
+include { paramsSummaryMap              } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_seqinspector_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -203,12 +203,11 @@ workflow SEQINSPECTOR {
 
     if (params.run_picard_collecthsmetrics && !("picard_collectmultiplemetrics" in skip_tools)) {
 
-        ch_bait_intervals = channel.fromPath(params.bait_intervals)
-            .collect()
+        ch_bait_intervals   = channel.fromPath(params.bait_intervals)
+                                   .collect()
 
         ch_target_intervals = channel.fromPath(params.target_intervals)
-            .collect()
-
+                                     .collect()
 
         QC_BAM(
             ch_bam_bai,
@@ -220,7 +219,7 @@ workflow SEQINSPECTOR {
         )
 
     ch_multiqc_files = ch_multiqc_files.mix(QC_BAM.out.hs_metrics)
-    ch_versions = ch_versions.mix(QC_BAM.out.versions)
+    ch_versions      = ch_versions.mix(QC_BAM.out.versions)
     }
 
 
@@ -342,7 +341,7 @@ workflow SEQINSPECTOR {
     )
 
     emit:
-    global_report = MULTIQC_GLOBAL.out.report.toList() // channel: [ /path/to/multiqc_report.html ]
+    global_report   = MULTIQC_GLOBAL.out.report.toList() // channel: [ /path/to/multiqc_report.html ]
     grouped_reports = MULTIQC_PER_TAG.out.report.toList() // channel: [ /path/to/multiqc_report.html ]
-    versions = ch_versions // channel: [ path(versions.yml) ]
+    versions        = ch_versions // channel: [ path(versions.yml) ]
 }
